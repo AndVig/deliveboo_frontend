@@ -5,7 +5,7 @@ import AppHomePage from './pages/AppHomePage.vue';
 
 
 export default {
-  name: 'AppDeliveBoo',
+  name: 'App',
   components: {
     AppHeader,
     AppFooter,
@@ -16,7 +16,11 @@ export default {
 
 <template>
   <AppHeader />
-  <AppHomePage />
+  <main>
+    <div class="container py-5 text-center">
+      <router-view></router-view>
+    </div>
+  </main>
   <AppFooter />
 </template>
 

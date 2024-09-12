@@ -1,19 +1,20 @@
 <script>
-export default{
-  name:'HomePageComponent',
+export default {
+  name: 'AppHomePage',
 };
 </script>
 
 <template>
-  <main>Home</main>
+  <h1>Home</h1>
 </template>
 
 <style>
-  main{
-    height: 100%;
-    width: 100%;
-    h1 {
-        color: red;
-    }
+main {
+  height: 100%;
+  width: 100%;
+
+  h1 {
+    color: red;
   }
+}
 </style>
