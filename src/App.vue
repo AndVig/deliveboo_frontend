@@ -1,16 +1,16 @@
 <script>
 import AppHeader from './components/AppHeader.vue';
 import AppFooter from './components/AppFooter.vue';
-import AppHomePage from './components/AppHomePage.vue';
+import AppHomePage from './pages/AppHomePage.vue';
 
 
-export default{
-    name:'AppDeliveBoo',
-    components:{
-        AppHeader,
-        AppFooter,
-        AppHomePage,
-    }
+export default {
+  name: 'AppDeliveBoo',
+  components: {
+    AppHeader,
+    AppFooter,
+    AppHomePage,
+  }
 }
 </script>
 
@@ -20,6 +20,4 @@ export default{
   <AppFooter />
 </template>
 
-<style>
-
-</style>
+<style></style>
