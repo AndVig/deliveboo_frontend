@@ -8,6 +8,7 @@ import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
 // Import Swiper styles
 import 'swiper/css';
 import AppCarousel from "../components/AppCarousel.vue"
+import AppSearch from "../components/AppSearch.vue";
 export default {
   name: 'AppHomePage',
   data() {
@@ -23,6 +24,7 @@ export default {
   },
   components: {
       AppCarousel,
+      AppSearch,
     },
     setup() {
       const onSwiper = (swiper) => {
@@ -63,8 +65,11 @@ export default {
   <div>
     <div class="d-flex">
       <div class="row">
-        <div class="col--4 py-3" v-for="restaurant in response.data" :key="restaurant.id">
+        <!-- <div class="col--4 py-3" v-for="restaurant in response.data" :key="restaurant.id">
           <AppCarousel :companyName="restaurant.companyName" />
+        </div> -->
+        <div class="container">
+          <AppSearch />
         </div>
       </div>
     </div>
