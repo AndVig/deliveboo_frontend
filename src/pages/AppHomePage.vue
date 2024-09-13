@@ -1,50 +1,51 @@
 <script>
 import axios from "axios";
 
-import AppCarousel from "../components/AppCarousel.vue"
-import AppSponsor from "../components/AppSponsor.vue"
+import AppCarousel from "../components/AppCarousel.vue";
+import AppSponsor from "../components/AppSponsor.vue";
+import AppMerchBlock from "../components/AppMerchBlock.vue";
 export default {
-  name: 'AppHomePage',
+  name: "AppHomePage",
   data() {
     return {
       api: {
-        baseUrl: 'http://127.0.0.1:8000',
+        baseUrl: "http://127.0.0.1:8000",
         endPoints: {
-          restaurantsList: '/api/restaurants'
-        }
+          restaurantsList: "/api/restaurants",
+        },
       },
       response: {},
-    }
+    };
   },
   components: {
     AppCarousel,
     AppSponsor,
+    AppMerchBlock,
   },
   methods: {
     getRestaurants() {
       const apiUrl = this.api.baseUrl + this.api.endPoints.restaurantsList;
-      axios.get(apiUrl)
+      axios
+        .get(apiUrl)
         .then((response) => {
           console.log(response.data);
           this.response = response.data;
         })
         .catch((error) => {
-          console.error('Errore nel recupero dei ristoranti:', error);
+          console.error("Errore nel recupero dei ristoranti:", error);
         });
-    }
+    },
   },
   created() {
     this.getRestaurants();
-
-  }
+  },
 };
-
-
 </script>
 
 <template>
   <AppCarousel />
   <AppSponsor />
+  <AppMerchBlock />
 </template>
 
 <style></style>
