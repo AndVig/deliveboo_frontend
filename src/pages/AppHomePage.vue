@@ -2,6 +2,7 @@
 import axios from "axios";
 
 import AppCarousel from "../components/AppCarousel.vue"
+import AppSponsor from "../components/AppSponsor.vue"
 export default {
   name: 'AppHomePage',
   data() {
@@ -17,6 +18,7 @@ export default {
   },
   components: {
     AppCarousel,
+    AppSponsor,
   },
   methods: {
     getRestaurants() {
@@ -41,8 +43,8 @@ export default {
 </script>
 
 <template>
-  <h1>Home</h1>
   <AppCarousel />
+  <AppSponsor />
 </template>
 
 <style></style>
