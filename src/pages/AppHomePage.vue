@@ -4,6 +4,7 @@ import axios from "axios";
 import AppCarousel from "../components/AppCarousel.vue";
 import AppSponsor from "../components/AppSponsor.vue";
 import AppMerchBlock from "../components/AppMerchBlock.vue";
+import AppSearch from "../components/AppSearch.vue";
 export default {
   name: "AppHomePage",
   data() {
@@ -19,6 +20,7 @@ export default {
   },
   components: {
     AppCarousel,
+      AppSearch,
     AppSponsor,
     AppMerchBlock,
   },
@@ -43,9 +45,22 @@ export default {
 </script>
 
 <template>
-  <AppCarousel />
-  <AppSponsor />
-  <AppMerchBlock />
+  <h1>Home</h1>
+  <div>
+    <div class="d-flex">
+      <div class="row">
+        <!-- <div class="col--4 py-3" v-for="restaurant in response.data" :key="restaurant.id">
+          <AppCarousel :companyName="restaurant.companyName" />
+        </div> -->
+        <div class="container">
+          <AppSearch />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
 </template>
 
 <style></style>
