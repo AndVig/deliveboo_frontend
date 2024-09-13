@@ -32,7 +32,7 @@ export default {
   <header class="deliveroo-header">
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
-        <router-link :to="{ name: 'home' }" class="nav-link active navbar-brand" aria-current="page"><img src="../../public/img/logo.png" alt="Deliveroo logo" height="100"></router-link>
+        <router-link :to="{ name: 'home' }" class="nav-link active navbar-brand" aria-current="page"><img src="/img/logo.png" alt="Deliveroo logo" height="100"></router-link>
         
         <div class="navbar-nav ms-auto">
           <a href="#" class="nav-item nav-link text-white d-flex align-items-center me-3">
