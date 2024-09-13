@@ -46,13 +46,13 @@ export default {
   padding: 20px;
   border-radius: 10px;
   font-family: Arial, sans-serif;
-  text-align: center; /* Centra il testo orizzontalmente */
+  text-align: center;
 }
 
 .merch-header {
   display: flex;
   align-items: center;
-  justify-content: center; /* Centra il titolo orizzontalmente */
+  justify-content: center;
   margin-bottom: 15px;
 }
 
@@ -66,13 +66,13 @@ export default {
   margin-bottom: 10px;
   color: #555;
   font-size: 16px;
-  text-align: center; /* Assicurati che il testo della descrizione sia centrato */
+  text-align: center;
 }
 
 .merch-terms {
   font-size: 12px;
   color: #777;
-  text-align: center; /* Centra il testo delle condizioni */
+  text-align: center;
 }
 
 .terms-link {
