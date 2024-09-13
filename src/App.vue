@@ -17,9 +17,7 @@ export default {
 <template>
   <AppHeader />
   <main>
-    <div class="container py-5 text-center">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </main>
   <AppFooter />
 </template>
