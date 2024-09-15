@@ -1,3 +1,15 @@
+<template>
+  <div class="carousel-container">
+    <div class="carousel-wrapper">
+      <div class="animation" ref="animationContainer">
+        <div v-for="(image, index) in images" :key="index" class="slide">
+          <img :src="image" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 export default {
   name: 'Carousel',
@@ -62,8 +74,8 @@ export default {
       const animationDuration = `${this.speed}s`;
       const animationCSS = `
         @keyframes ${animationName} {
-          0% { margin-left: 0px; }
-          100% { margin-left: -${this.animationWidth}px; }
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-${this.animationWidth}px); }
         }
         .animation {
           animation: ${animationName} ${animationDuration} linear infinite;
@@ -80,40 +92,28 @@ export default {
 };
 </script>
 
-<template>
-  <div class="block py-3 bg-color">
-    <div class="animation mb-3" ref="animationContainer">
-      <div v-for="(image, index) in images" :key="index" class="slide">
-        <img :src="image" />
-      </div>
-    </div>
-  </div>
-</template>
-
-<style scoped lang="scss">
-.bg-color {
-  background-color: #F1F0F0;
-}
-
-.block {
+<style scoped>
+.carousel-container {
   overflow: hidden;
   width: 100%;
   background: #fff;
 }
 
+.carousel-wrapper {
+  overflow: hidden;
+}
+
 .animation {
-  width: auto;
-  height: 100px;
-  white-space: nowrap;
+  display: flex;
+  height: 150px;
 }
 
 .slide {
-  display: inline-block;
+  flex-shrink: 0;
   padding: 0 10px;
 }
 
 img {
-  width: auto;
   height: 150px;
   border-radius: 10px;
   margin-inline: 0.8rem;
