@@ -11,20 +11,22 @@ export default {
     const loading = ref(true);
     const error = ref(null);
 
-    const api = {
+    const api = ref({
       baseUrl: 'http://127.0.0.1:8000',
       endPoints: {
         restaurantsList: '/api/restaurants',
         typesList: '/api/types',
         restaurantDetails: '/api/restaurants' // Aggiungiamo questo endpoint
       }
+    });
+    const getImageUrl = (path) => {
+      return `${api.value.baseUrl}/storage${path}`;
     };
-
     const fetchRestaurantDetails = async () => {
       const slug = route.params.slug;
       try {
         loading.value = true;
-        const url = `${api.baseUrl}${api.endPoints.restaurantDetails}/${slug}`;
+        const url = `${api.value.baseUrl}${api.value.endPoints.restaurantDetails}/${slug}`;
         console.log('Fetching restaurant details from:', url);
         const response = await axios.get(url);
         restaurant.value = response.data.data;
@@ -44,7 +46,8 @@ export default {
     return {
       restaurant,
       loading,
-      error
+      error,
+      getImageUrl
     };
   }
 }
@@ -68,7 +71,7 @@ export default {
       <div class="card mb-4">
         <div class="row g-0">
           <div class="col-md-4">
-            <img :src="restaurant.path_img" class="img-fluid rounded-start" :alt="restaurant.name">
+            <img :src="getImageUrl(restaurant.image)" class="img-fluid rounded-start" :alt="restaurant.name">
           </div>
           <div class="col-md-8">
             <div class="card-body">
@@ -86,7 +89,7 @@ export default {
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div class="col" v-for="dish in restaurant.dishes" :key="dish.id">
           <div class="card h-100">
-            <img :src="dish.image" class="card-img-top" :alt="dish.name">
+            <img :src="getImageUrl(dish.image)" class="card-img-top" :alt="dish.name">
             <div class="card-body">
               <h5 class="card-title">{{ dish.name }}</h5>
               <p class="card-text">{{ dish.description }}</p>
