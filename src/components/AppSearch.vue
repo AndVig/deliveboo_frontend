@@ -1,78 +1,128 @@
 <script>
+import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 export default {
-    name: "AppSearch",
-    data() {
-        return {
-            api: {
-                baseUrl: 'http://127.0.0.1:8000',
-                endPoints: {
-                    restaurantsList: '/api/restaurants',
-                    typesList: '/api/types',
-                }
-            },
-            availableTypes: [],
-            selectedTypes: [],
-            restaurants: [],
-            searched: false,
-            loading: true
-        }
-    },
-    mounted() {
-        this.loadTypes();
-    },
-    methods: {
-        async loadTypes() {
-            try {
-                const url= this.api.baseUrl + this.api.endPoints.typesList;
-                console.log(url);
-                const response = await axios.get(url);
-                this.availableTypes = response.data.data;
-                console.log(response);
-                this.loading = false;
-            } catch (error) {
-                console.error('Errore nel caricamento dei tipi di cucina:', error);
-                this.loading = false;
-            }
-        },
-        async searchRestaurants() {
-            if (this.selectedTypes.length === 0) return;
-            try {
-                this.searched = true;
-                const response = await axios.get(this.api.baseUrl + this.api.endPoints.restaurantsList, {
-                    params: {
-                        types: this.selectedTypes.join(',')
-                    }
-                });
-                this.restaurants = response.data.data;
-            } catch (error) {
-                console.error('Errore nella ricerca dei ristoranti:', error);
-            }
-        }
-    }
+  name: "AppSearch",
+  setup() {
+    const router = useRouter();
+    const api = {
+      baseUrl: 'http://127.0.0.1:8000',
+      endPoints: {
+        restaurantsList: '/api/restaurants',
+        typesList: '/api/types',
+      }
+    };
+
+    const availableTypes = ref([]);
+    const selectedTypes = ref([]);
+    const restaurants = ref([]);
+    const searched = ref(false);
+    const loading = ref(true);
+
+    const loadTypes = async () => {
+      try {
+        const url = api.baseUrl + api.endPoints.typesList;
+        console.log('Caricamento tipi da URL:', url);
+        const response = await axios.get(url);
+        availableTypes.value = response.data.data;
+        console.log('Tipi caricati:', availableTypes.value);
+        loading.value = false;
+      } catch (error) {
+        console.error('Errore nel caricamento dei tipi di cucina:', error);
+        loading.value = false;
+      }
+    };
+
+    const searchRestaurants = async () => {
+      if (selectedTypes.value.length === 0) return;
+      try {
+        searched.value = true;
+        const url = api.baseUrl + api.endPoints.restaurantsList;
+        console.log('Ricerca ristoranti da URL:', url);
+        console.log('Tipi selezionati:', selectedTypes.value);
+        const response = await axios.get(url, {
+          params: {
+            types: selectedTypes.value.join(',')
+          }
+        });
+        restaurants.value = response.data.data;
+        console.log('Ristoranti trovati:', restaurants.value);
+      } catch (error) {
+        console.error('Errore nella ricerca dei ristoranti:', error);
+      }
+    };
+
+    const goToRestaurantPage = (restaurantSlug) => {
+      router.push({ name: 'RestaurantDetails', params: { slug: restaurantSlug } });
+    };
+
+    onMounted(() => {
+      console.log('Componente montato');
+      loadTypes();
+    });
+
+    watch(availableTypes, (newValue) => {
+      console.log('availableTypes aggiornato:', newValue);
+    });
+
+    return {
+      availableTypes,
+      selectedTypes,
+      restaurants,
+      searched,
+      loading,
+      searchRestaurants,
+      goToRestaurantPage
+    };
+  }
 }
 </script>
 
 <template>
-    <div>
-        <h2>Cerca Ristoranti per Tipo</h2>
-        <div v-if="loading">Caricamento tipi di cucina...</div>
-        <div v-else>
-            <div v-for="type in availableTypes" :key="type.id">
-                <input type="checkbox" :id="type.id" :value="type.name" v-model="selectedTypes">
-                <label :for="type.id">{{ type.name }}</label>
-            </div>
-            <button @click="searchRestaurants" :disabled="selectedTypes.length === 0">Cerca Ristoranti</button>
-            <div v-if="restaurants.length">
-                <h3>Risultati:</h3>
-                <ul>
-                    <li v-for="restaurant in restaurants" :key="restaurant.id">
-                        {{ restaurant.name }}
-                    </li>
-                </ul>
-            </div>
-            <p v-else-if="searched">Nessun ristorante trovato.</p>
-        </div>
+  <div class="container py-4">
+    <h2 class="text-center mb-4">Cerca Ristoranti per Tipo</h2>
+    <div v-if="loading" class="text-center p-4 bg-light rounded">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Caricamento...</span>
+      </div>
+      <p>Caricamento tipi di cucina...</p>
     </div>
+    <div v-else class="bg-white rounded shadow p-4">
+      <div v-if="availableTypes.length === 0" class="alert alert-danger text-center" role="alert">
+        Nessun tipo di cucina disponibile. Controlla la connessione al server.
+      </div>
+      <div v-else class="mb-4">
+        <div class="form-check form-check-inline" v-for="type in availableTypes" :key="type.id">
+          <input class="form-check-input" type="checkbox" :id="type.id" :value="type.name" v-model="selectedTypes">
+          <label class="form-check-label" :for="type.id">{{ type.name }}</label>
+        </div>
+      </div>
+      <button @click="searchRestaurants" :disabled="selectedTypes.length === 0"
+        class="btn btn-primary w-100">
+        Cerca Ristoranti
+      </button>
+      <div v-if="restaurants.length" class="mt-4">
+        <h3 class="mb-3">Risultati:</h3>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+          <div class="col" v-for="restaurant in restaurants" :key="restaurant.id">
+            <div class="card h-100 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)">
+              <div class="card-body">
+                <h5 class="card-title">{{ restaurant.name }}</h5>
+                <p class="card-text">{{ restaurant.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p v-else-if="searched" class="mt-4 text-center text-danger">Nessun ristorante trovato.</p>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.cursor-pointer {
+  cursor: pointer;
+}
+</style>
