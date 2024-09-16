@@ -1,7 +1,7 @@
 <template>
   <div class="carousel-container">
     <div class="carousel-wrapper">
-      <div class="animation" ref="animationContainer">
+      <div class="animation my-2" ref="animationContainer">
         <div v-for="(image, index) in images" :key="index" class="slide">
           <img :src="image" />
         </div>
@@ -12,12 +12,12 @@
 
 <script>
 export default {
-  name: 'Carousel',
+  name: "Carousel",
   props: {
     images: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -48,7 +48,9 @@ export default {
       }
 
       // Numero di slide visibili
-      this.slidesVisible = Math.ceil(this.$el.offsetWidth / slides[0].offsetWidth);
+      this.slidesVisible = Math.ceil(
+        this.$el.offsetWidth / slides[0].offsetWidth
+      );
 
       // Copiare il numero di slide visibili per creare l'effetto loop
       for (let i = 0; i < this.slidesVisible; i++) {
@@ -57,7 +59,10 @@ export default {
       }
 
       // Larghezza totale dopo aver aggiunto le slide clonate
-      this.sliderWidth = Array.from(container.children).reduce((acc, slide) => acc + slide.offsetWidth, 0);
+      this.sliderWidth = Array.from(container.children).reduce(
+        (acc, slide) => acc + slide.offsetWidth,
+        0
+      );
 
       // Imposta la larghezza e l'altezza del contenitore animato
       container.style.width = `${this.sliderWidth}px`;
@@ -70,7 +75,7 @@ export default {
       this.startAnimation();
     },
     startAnimation() {
-      const animationName = 'smoothscroll';
+      const animationName = "smoothscroll";
       const animationDuration = `${this.speed}s`;
       const animationCSS = `
         @keyframes ${animationName} {
@@ -83,8 +88,8 @@ export default {
       `;
 
       // Aggiungere lo stile dinamicamente
-      const styleTag = document.createElement('style');
-      styleTag.type = 'text/css';
+      const styleTag = document.createElement("style");
+      styleTag.type = "text/css";
       styleTag.innerHTML = animationCSS;
       document.head.appendChild(styleTag);
     },
