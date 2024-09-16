@@ -40,17 +40,13 @@ export default {
 
 <style scoped>
 .merch-block {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url(/img/sfondo.jpg);
-  background-size: cover;
-  background-position: center;
-  padding: 40px 20px;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  text-align: center;
-  color: #fff;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   position: relative;
+  width: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 
 .merch-block::before {
@@ -60,48 +56,51 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(
-    45deg,
-    rgba(255, 105, 0, 0.3) 0%,
-    rgba(207, 0, 114, 0.3) 100%
-  );
-  z-index: 1;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url(/img/sfondo.jpg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px);
+  z-index: -1;
 }
 
 .merch-content {
-  position: relative;
-  z-index: 2;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 90%;
+  width: 600px;
+  text-align: center;
+  color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
 .merch-title {
-  font-size: 32px;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
   font-weight: 700;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .merch-description {
-  font-size: 18px;
+  font-size: clamp(1rem, 3vw, 1.125rem);
   line-height: 1.6;
-  margin-bottom: 30px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  margin-bottom: 1.5rem;
 }
 
 .merch-cta {
   background-color: #ff6900;
   color: #fff;
   border: none;
-  padding: 12px 30px;
-  font-size: 18px;
+  padding: 0.75rem 1.5rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.125rem);
   font-weight: 600;
   border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
 }
 
 .merch-cta:hover {
@@ -111,10 +110,10 @@ export default {
 }
 
 .merch-terms {
-  font-size: 14px;
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
   opacity: 0.8;
-  max-width: 80%;
-  margin: 20px auto 0;
+  max-width: 100%;
+  margin: 1rem auto 0;
 }
 
 .terms-link {
@@ -129,22 +128,13 @@ export default {
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  .merch-title {
-    font-size: 24px;
+@media (max-width: 480px) {
+  .merch-block {
+    min-height: 300px;
   }
 
-  .merch-description {
-    font-size: 16px;
-  }
-
-  .merch-cta {
-    font-size: 16px;
-    padding: 10px 25px;
-  }
-
-  .merch-terms {
-    font-size: 12px;
+  .merch-content {
+    padding: 1.5rem;
   }
 }
 </style>
