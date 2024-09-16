@@ -68,7 +68,7 @@ export default {
       <div class="card mb-4">
         <div class="row g-0">
           <div class="col-md-4">
-            <img :src="restaurant.image" class="img-fluid rounded-start" :alt="restaurant.name">
+            <img :src="restaurant.path_img" class="img-fluid rounded-start" :alt="restaurant.name">
           </div>
           <div class="col-md-8">
             <div class="card-body">

@@ -7,13 +7,13 @@ export default {
   name: "AppSearch",
   setup() {
     const router = useRouter();
-    const api = {
+    const api = ref({
       baseUrl: 'http://127.0.0.1:8000',
       endPoints: {
         restaurantsList: '/api/restaurants',
         typesList: '/api/types',
       }
-    };
+    });
 
     const availableTypes = ref([]);
     const selectedTypes = ref([]);
@@ -21,9 +21,13 @@ export default {
     const searched = ref(false);
     const loading = ref(true);
 
+    const getImageUrl = (path) => {
+      return `${api.value.baseUrl}/storage${path}`;
+    };
+    
     const loadTypes = async () => {
       try {
-        const url = api.baseUrl + api.endPoints.typesList;
+        const url = api.value.baseUrl + api.value.endPoints.typesList;
         console.log('Caricamento tipi da URL:', url);
         const response = await axios.get(url);
         availableTypes.value = response.data.data;
@@ -39,7 +43,7 @@ export default {
       if (selectedTypes.value.length === 0) return;
       try {
         searched.value = true;
-        const url = api.baseUrl + api.endPoints.restaurantsList;
+        const url = api.value.baseUrl + api.value.endPoints.restaurantsList;
         console.log('Ricerca ristoranti da URL:', url);
         console.log('Tipi selezionati:', selectedTypes.value);
         const response = await axios.get(url, {
@@ -74,9 +78,15 @@ export default {
       searched,
       loading,
       searchRestaurants,
-      goToRestaurantPage
+      goToRestaurantPage,
+      getImageUrl
     };
-  }
+  },
+  // methods:{
+  //   getImageUrl(path) {
+  //     return `${api.baseUrl}${path}`;
+  //   },
+  // }
 }
 </script>
 
@@ -99,15 +109,21 @@ export default {
           <label class="form-check-label" :for="type.id">{{ type.name }}</label>
         </div>
       </div>
-      <button @click="searchRestaurants" :disabled="selectedTypes.length === 0"
-        class="btn btn-primary w-100">
+      <button @click="searchRestaurants" :disabled="selectedTypes.length === 0" class="btn btn-primary w-100">
         Cerca Ristoranti
       </button>
       <div v-if="restaurants.length" class="mt-4">
         <h3 class="mb-3">Risultati:</h3>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
           <div class="col" v-for="restaurant in restaurants" :key="restaurant.id">
-            <div class="card h-100 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)">
+            <!-- <div class="card h-100 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)">
+              <div class="card-body">
+                <h5 class="card-title">{{ restaurant.name }}</h5>
+                <p class="card-text">{{ restaurant.description }}</p>
+              </div>
+            </div> -->
+            <div class="card h-100 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)" style="width: 18rem;">
+               <img :src="getImageUrl(restaurant.image)" class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{ restaurant.name }}</h5>
                 <p class="card-text">{{ restaurant.description }}</p>
