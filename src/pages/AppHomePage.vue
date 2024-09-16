@@ -48,23 +48,11 @@ export default {
 </script>
 
 <template>
-  <h1>Home</h1>
-  <div>
-    <div class="d-flex">
-      <div class="row">
-        <div class="container">
-          
-          <AppSearch />
-          <AppCarousel />
-          <AppSponsor />
-          <AppMerchBlock />
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
+ 
+  <AppSearch />
+  <AppCarousel />
+  <AppSponsor />
+  <AppMerchBlock />
 </template>
 
 <style></style>
