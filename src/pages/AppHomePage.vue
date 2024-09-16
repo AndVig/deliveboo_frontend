@@ -56,8 +56,8 @@ export default {
           
           <AppSearch />
           <AppCarousel />
-          <AppMerchBlock />
           <AppSponsor />
+          <AppMerchBlock />
         </div>
       </div>
     </div>
