@@ -11,7 +11,7 @@ export default {
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/15150136/2120.png",
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/30151559/16_big1.png",
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/30151554/1417.png",
-        "https://cdn.logojoy.com/wp-content/uploads/2018/05/30151508/330.png",
+
       ],
       images2: [
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/30151603/1715.png",
@@ -20,6 +20,7 @@ export default {
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/30151609/1916.png",
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/15150147/3129.png",
         "https://cdn.logojoy.com/wp-content/uploads/2018/05/15150201/4122.png",
+
       ],
     };
   },
