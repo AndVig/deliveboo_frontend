@@ -122,8 +122,8 @@ export default {
                 <p class="card-text">{{ restaurant.description }}</p>
               </div>
             </div> -->
-            <div class="card h-100 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)" style="width: 18rem;">
-               <img :src="getImageUrl(restaurant.image)" class="card-img-top" alt="...">
+            <div class="card h-50 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)" style="width: 18rem;">
+               <img :src="getImageUrl(restaurant.image)" class="card-img-top restaurant-img " alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{ restaurant.name }}</h5>
                 <p class="card-text">{{ restaurant.description }}</p>
@@ -140,5 +140,9 @@ export default {
 <style scoped>
 .cursor-pointer {
   cursor: pointer;
+}
+.restaurant-img{
+  height: 300px;
+  object-fit:cover;
 }
 </style>
