@@ -2,9 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import AppHomePage from "./pages/AppHomePage.vue";
 import AppMenuPage from "./pages/AppMenuPage.vue";
-import AppCarrelloPage from "./pages/AppCarrelloPage.vue";
+// import AppCar from "./pages/AppCarrelloPage.vue";
 import RestaurantDetails from "./pages/RestaurantDetails.vue";
-
 
 import axios from "axios";
 
@@ -43,11 +42,11 @@ const router = createRouter({
       name: "menu",
       component: AppMenuPage,
     },
-    {
-      path: "/carrello",
-      name: "carrello",
-      component: AppCarrelloPage,
-    },
+    // {
+    //   path: "/carrello",
+    //   name: "carrello",
+    //   component: AppCarrelloPage,
+    // },
     // Rotta dinamica con parametro
     {
       path: "/restaurant/:slug",
