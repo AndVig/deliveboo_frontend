@@ -143,5 +143,6 @@ export default {
 }
 .restaurant-img{
   height: 300px;
+  object-fit:cover;
 }
 </style>
