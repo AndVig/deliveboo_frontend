@@ -5,15 +5,15 @@ import AppSearch from '../components/AppSearch.vue';
 export default {
     name: 'AppMenuPage',
     components: {
-      AppSearch,
+      
     },
 };
 </script>
 
 <template>
-    <h1>menu</h1>
+    <h1>Checkout</h1>
     <div>
-        <AppSearch />
+        
     </div>
 </template>
 
