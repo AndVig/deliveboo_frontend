@@ -1,7 +1,8 @@
 <template>
-  <div>
+  <div class="container text-start my-5" >
+    <h2>Pagamento</h2>
     <div ref="dropinContainer"></div>
-    <button @click="onSubmit" :disabled="!isPaymentMethodReady">Paga</button>
+    <button class="btn btn-primary btn-lg" @click="onSubmit" :disabled="!isPaymentMethodReady">Paga</button>
   </div>
 </template>
 
