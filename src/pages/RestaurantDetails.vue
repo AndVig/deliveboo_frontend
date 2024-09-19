@@ -137,6 +137,7 @@ export default {
       incrementQuantity,
       decrementQuantity,
       updateTotalItems,
+      isCheckoutPage: false,
     };
   },
 };
@@ -232,7 +233,10 @@ export default {
       </div>
       <transition name="slide">
         <div v-show="isCartVisible" class="col-md-3 cart-column">
-          <AppCart @update-total-items="updateTotalItems" />
+          <AppCart
+            @update-total-items="updateTotalItems"
+            :isCheckoutPage="isCheckoutPage"
+          />
         </div>
       </transition>
     </div>

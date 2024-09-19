@@ -1,10 +1,19 @@
 <script>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   name: "AppCart",
   emits: ["update-total-items"],
+  props: {
+    isCheckoutPage: {
+      type: Boolean,
+      default: false,
+    },
+  },
   setup(props, { emit }) {
+    const route = useRoute();
+    const router = useRouter();
     const cart = ref({ restaurantId: null, restaurantName: "", items: [] });
 
     const loadCart = () => {
@@ -110,6 +119,27 @@ export default {
       return Number(price).toFixed(2);
     };
 
+    const handleButtonClick = () => {
+      if (props.isCheckoutPage) {
+        // Torna alla pagina dei dettagli del ristorante
+        const restaurantSlug = route.query.restaurantSlug;
+        if (restaurantSlug) {
+          router.push({
+            name: "RestaurantDetails",
+            params: { slug: restaurantSlug },
+          });
+        } else {
+          console.error("Restaurant slug not found in query parameters");
+        }
+      } else {
+        // Vai alla pagina di checkout
+        router.push({
+          name: "checkout",
+          query: { restaurantSlug: route.params.slug },
+        });
+      }
+    };
+
     onMounted(() => {
       loadCart();
       window.addEventListener("add-to-cart", addToCart);
@@ -133,6 +163,7 @@ export default {
       cartTotal,
       formatPrice,
       totalItemsInCart,
+      handleButtonClick,
     };
   },
 };
@@ -186,7 +217,9 @@ export default {
         </button>
       </div>
 
-      <a href="http://localhost:5174/checkout" class="btn btn-primary btn-lg" role="button">Procedi all'ordine</a>
+      <button @click="handleButtonClick" class="btn btn-primary btn-lg">
+        {{ isCheckoutPage ? "Torna al ristorante" : "Procedi all'ordine" }}
+      </button>
     </div>
   </div>
 </template>
