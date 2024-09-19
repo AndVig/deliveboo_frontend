@@ -1,11 +1,11 @@
 <script>
-import AppSearch from '../components/AppSearch.vue';
+import AppCart from '../components/AppCart.vue';
 
 
 export default {
     name: 'AppMenuPage',
     components: {
-      
+      AppCart,
     },
 };
 </script>
@@ -13,7 +13,7 @@ export default {
 <template>
     <h1>Checkout</h1>
     <div>
-        
+        <AppCart />
     </div>
 </template>
 

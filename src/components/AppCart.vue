@@ -186,7 +186,7 @@ export default {
         </button>
       </div>
 
-      <button class="btn btn-primary btn-lg">Procedi all'ordine</button>
+      <a href="http://localhost:5174/checkout" class="btn btn-primary btn-lg" role="button">Procedi all'ordine</a>
     </div>
   </div>
 </template>
