@@ -39,7 +39,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "../scss/partials/variables" as *;
 .merch-block {
   position: relative;
   width: 100%;
@@ -90,7 +91,7 @@ export default {
 }
 
 .merch-cta {
-  background-color: #ff6900;
+  background-color: $main-color;
   color: #fff;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -105,7 +106,7 @@ export default {
 }
 
 .merch-cta:hover {
-  background-color: #ff8c00;
+  background-color: $main-color;
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(255, 105, 0, 0.3);
 }
@@ -118,14 +119,14 @@ export default {
 }
 
 .terms-link {
-  color: #ff6900;
+  color: $main-color;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .terms-link:hover {
-  color: #ff8c00;
+  color: $main-color;
   text-decoration: underline;
 }
 
