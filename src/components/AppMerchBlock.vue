@@ -7,6 +7,7 @@
       <p class="merch-terms">
         {{ terms }}
         <a :href="termsLink" class="terms-link">Termini e condizioni qui.</a>
+        prova
       </p>
     </div>
   </div>
