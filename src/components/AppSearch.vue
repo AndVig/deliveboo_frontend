@@ -92,7 +92,7 @@ export default {
 
 <template>
   <div class="container py-4">
-    <h2 class="text-center mb-4">Cerca Ristoranti per Tipo</h2>
+    <h2 class="text-center mb-4 ">Cerca Ristoranti per Tipo</h2>
     <div v-if="loading" class="text-center p-4 bg-light rounded">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Caricamento...</span>
@@ -109,19 +109,13 @@ export default {
           <label class="form-check-label" :for="type.id">{{ type.name }}</label>
         </div>
       </div>
-      <button @click="searchRestaurants" :disabled="selectedTypes.length === 0" class="btn btn-primary w-100">
+      <button @click="searchRestaurants" :disabled="selectedTypes.length === 0" class="btn btn-primary w-100 color">
         Cerca Ristoranti
       </button>
       <div v-if="restaurants.length" class="mt-4">
         <h3 class="mb-3">Risultati:</h3>
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          <div class="col" v-for="restaurant in restaurants" :key="restaurant.id">
-            <!-- <div class="card h-100 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)">
-              <div class="card-body">
-                <h5 class="card-title">{{ restaurant.name }}</h5>
-                <p class="card-text">{{ restaurant.description }}</p>
-              </div>
-            </div> -->
+          <div class="col " v-for="restaurant in restaurants" :key="restaurant.id">
             <div class="card h-50 cursor-pointer" @click="goToRestaurantPage(restaurant.slug)" style="width: 18rem;">
                <img :src="getImageUrl(restaurant.image)" class="card-img-top restaurant-img " alt="...">
               <div class="card-body">
@@ -137,12 +131,17 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "../scss/partials/variables" as *;
+
 .cursor-pointer {
   cursor: pointer;
 }
 .restaurant-img{
   height: 300px;
   object-fit:cover;
+}
+.color{
+  background-color: $main-color;
 }
 </style>
