@@ -211,7 +211,7 @@ export default {
                     >
                       +
                     </button>
-                    <button @click="addToCart(dish)" class="btn btn-primary">
+                    <button @click="addToCart(dish)" class="btn btn-primary color">
                       Aggiungi
                       {{
                         quantities[dish.id] > 1
@@ -253,7 +253,11 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@use "../scss/partials/variables" as *;
+.color{
+  background-color: $main-color;
+}
 .restaurant-details img {
   max-height: 300px;
   object-fit: cover;
