@@ -1,12 +1,23 @@
 <template>
   <div>
-    <div ref="dropinContainer"></div>
-    <button @click="onSubmit" :disabled="!isPaymentMethodReady">Paga</button>
+    <form @submit.prevent="onSubmit">
+      <div>
+        <label for="email">Email:</label>
+        <input id="email" v-model="email" type="email" required />
+      </div>
+      <div>
+        <label for="address">Indirizzo:</label>
+        <input id="address" v-model="address" type="text" required />
+      </div>
+      <div ref="dropinContainer"></div>
+      <button type="submit" :disabled="!isPaymentMethodReady">Paga</button>
+    </form>
   </div>
 </template>
 
 <script>
 import dropin from "braintree-web-drop-in";
+import axios from "axios";
 
 export default {
   name: "AppPayment",
@@ -16,13 +27,42 @@ export default {
       isPaymentMethodReady: false,
       isLoading: true,
       error: null,
-      cseKey: "sandbox_nddp4k74_cyss7gspwctv5d4t", // Sostituisci con la tua vera CSE Key
+      cseKey: "sandbox_nddp4k74_cyss7gspwctv5d4t",
+      email: "",
+      address: "",
     };
   },
-  mounted() {
-    this.initializeBraintreeWithRetry();
+
+  async created() {
+    await this.initializeAxios();
   },
+
+  mounted() {
+    this.$nextTick(() => {
+      this.initializeBraintreeWithRetry();
+    });
+  },
+
   methods: {
+    getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    },
+
+    async initializeAxios() {
+      axios.defaults.withCredentials = true;
+      axios.defaults.baseURL = "http://localhost:8000";
+
+      try {
+        // Recupera il token CSRF
+        await axios.get("/sanctum/csrf-cookie");
+        console.log("CSRF cookie impostato con successo");
+      } catch (error) {
+        console.error("Errore nell'ottenere il CSRF cookie:", error);
+      }
+    },
+
     async initializeBraintreeWithRetry(retries = 5) {
       for (let i = 0; i < retries; i++) {
         try {
@@ -39,6 +79,7 @@ export default {
         }
       }
     },
+
     async initializeBraintree() {
       this.isLoading = true;
       console.log("Inizializzazione di Braintree con CSE Key:", this.cseKey);
@@ -77,21 +118,59 @@ export default {
         throw error;
       }
     },
+
+    async sendPaymentToBackend(nonce) {
+      try {
+        axios.defaults.withCredentials = true;
+        const token = this.getCookie("XSRF-TOKEN");
+        if (token) {
+          axios.defaults.headers.common["X-XSRF-TOKEN"] =
+            decodeURIComponent(token);
+        } else {
+          console.warn("CSRF token not found in cookie");
+        }
+        const response = await axios.post("/api/process-payment", {
+          paymentMethodNonce: nonce,
+          email: this.email,
+          address: this.address,
+        });
+
+        return response.data;
+      } catch (error) {
+        console.error("Errore nell'invio dei dati al backend:", error);
+        throw error;
+      }
+    },
+
     async onSubmit() {
       if (!this.dropinInstance) {
-        console.error("Istanza Braintree non inizializzata");
+        this.error = "Istanza Braintree non inizializzata";
         return;
       }
 
       try {
         const { nonce } = await this.dropinInstance.requestPaymentMethod();
         console.log("Nonce di pagamento:", nonce);
-        alert("Pagamento simulato con successo!");
+
+        const response = await this.sendPaymentToBackend(nonce);
+
+        if (response.success) {
+          console.log("Pagamento avvenuto con successo");
+          // Qui potresti voler reindirizzare l'utente o mostrare un messaggio di successo
+        } else {
+          this.error =
+            response.message ||
+            "Si è verificato un errore durante il pagamento.";
+        }
       } catch (error) {
         console.error("Errore nella richiesta del metodo di pagamento:", error);
+        this.error =
+          error.response?.data?.message ||
+          "Si è verificato un errore durante il pagamento.";
       }
     },
   },
+
   beforeUnmount() {
     if (this.dropinInstance) {
       this.dropinInstance.teardown();
@@ -99,3 +178,28 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:disabled {
+  background-color: #cccccc;
+}
+</style>
