@@ -2,6 +2,10 @@
   <div>
     <form @submit.prevent="onSubmit">
       <div>
+        <label for="name">Nome:</label>
+        <input id="name" v-model="name" type="name" required />
+      </div>
+      <div>
         <label for="email">Email:</label>
         <input id="email" v-model="email" type="email" required />
       </div>
@@ -30,6 +34,15 @@ export default {
       cseKey: "sandbox_nddp4k74_cyss7gspwctv5d4t",
       email: "",
       address: "",
+    };
+  },
+
+  setup() {
+    const loadCart = () => {
+      const savedCart = sessionStorage.getItem("cart");
+      if (savedCart) {
+        cart.value = JSON.parse(savedCart);
+      }
     };
   },
 
@@ -129,10 +142,13 @@ export default {
         } else {
           console.warn("CSRF token not found in cookie");
         }
+
         const response = await axios.post("/api/process-payment", {
           paymentMethodNonce: nonce,
+          name: this.name,
           email: this.email,
           address: this.address,
+          cart: JSON.parse(sessionStorage.getItem("cart")),
         });
 
         return response.data;
