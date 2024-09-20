@@ -217,9 +217,15 @@ export default {
         </button>
       </div>
 
-      <button @click="handleButtonClick" class="btn btn-primary btn-lg">
+      <button @click="handleButtonClick" class="btn btn-primary btn-lg color">
         {{ isCheckoutPage ? "Torna al ristorante" : "Procedi all'ordine" }}
       </button>
     </div>
   </div>
 </template>
+<style scoped lang="scss">
+@use "../scss/partials/variables" as *;
+.color{
+  background-color: $main-color;
+}
+</style>
