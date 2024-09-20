@@ -170,7 +170,7 @@ export default {
 </script>
 
 <template>
-  <div class="container mt-4">
+  <div class="container text-start mt-4">
     <h2 class="mb-4">Il tuo carrello</h2>
 
     <div v-if="!cart.items.length" class="alert alert-info">
@@ -217,9 +217,15 @@ export default {
         </button>
       </div>
 
-      <button @click="handleButtonClick" class="btn btn-primary btn-lg">
+      <button @click="handleButtonClick" class="btn btn-primary btn-lg color">
         {{ isCheckoutPage ? "Torna al ristorante" : "Procedi all'ordine" }}
       </button>
     </div>
   </div>
 </template>
+<style scoped lang="scss">
+@use "../scss/partials/variables" as *;
+.color{
+  background-color: $main-color;
+}
+</style>
