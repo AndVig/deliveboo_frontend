@@ -21,15 +21,14 @@ export default {
 </script>
 
 <template>
-  <div class="container text-center" >
+  <div class="container text-center">
     <div class="my-3">
       <h1>Checkout</h1>
     </div>
     <AppCart :isCheckoutPage="true" />
-    
+
     <AppPayment />
   </div>
-  
 </template>
 
 <style>

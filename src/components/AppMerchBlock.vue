@@ -1,13 +1,12 @@
 <template>
   <div class="merch-block">
-    <div class="merch-content">
+    <div class="merch-content m-5">
       <h2 class="merch-title">{{ title }}</h2>
       <p class="merch-description">{{ description }}</p>
       <button class="merch-cta">Ordina ora</button>
       <p class="merch-terms">
         {{ terms }}
         <a :href="termsLink" class="terms-link">Termini e condizioni qui.</a>
-        prova
       </p>
     </div>
   </div>

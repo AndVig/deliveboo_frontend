@@ -1,252 +1,210 @@
-<script>
+<script setup>
 import { ref, onMounted, computed, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import axios from "axios";
 import AppCart from "../components/AppCart.vue";
 
-export default {
-  name: "RestaurantDetails",
-  components: {
-    AppCart,
-  },
-  setup() {
-    const route = useRoute();
-    const restaurant = ref(null);
-    const loading = ref(true);
-    const error = ref(null);
-    const isCartVisible = ref(true);
-    const cart = ref({ items: [] });
-    const quantities = ref({});
-    const totalItemsInCart = ref(0);
+const route = useRoute();
+const restaurant = ref(null);
+const loading = ref(true);
+const error = ref(null);
+const isCartVisible = ref(true);
+const cart = ref({ items: [] });
+const quantities = ref({});
+const totalItemsInCart = ref(0);
 
-    const api = ref({
-      baseUrl: "http://127.0.0.1:8000",
-      endPoints: {
-        restaurantsList: "/api/restaurants",
-        typesList: "/api/types",
-        restaurantDetails: "/api/restaurants",
-      },
-    });
-
-    const getImageUrl = (path) => {
-      return `${api.value.baseUrl}/storage${path}`;
-    };
-
-    const fetchRestaurantDetails = async () => {
-      const slug = route.params.slug;
-      try {
-        loading.value = true;
-        const url = `${api.value.baseUrl}${api.value.endPoints.restaurantDetails}/${slug}`;
-        console.log("Fetching restaurant details from:", url);
-        const response = await axios.get(url);
-        restaurant.value = response.data.data;
-        console.log("Dettagli ristorante:", restaurant.value);
-        restaurant.value.dishes.forEach((dish) => {
-          quantities.value[dish.id] = 1;
-        });
-      } catch (err) {
-        console.error(
-          "Errore nel caricamento dei dettagli del ristorante:",
-          err
-        );
-        error.value =
-          "Si è verificato un errore nel caricamento dei dettagli del ristorante.";
-      } finally {
-        loading.value = false;
-      }
-    };
-
-    const loadCart = () => {
-      const savedCart = sessionStorage.getItem("cart");
-      if (savedCart) {
-        cart.value = JSON.parse(savedCart);
-        updateTotalItems();
-      }
-    };
-
-    const addToCart = (dish) => {
-      if (restaurant.value) {
-        const cartItem = {
-          id: dish.id,
-          name: dish.name,
-          price: Number(dish.price),
-          quantity: quantities.value[dish.id],
-          restaurantId: restaurant.value.id,
-          restaurantName: restaurant.value.name,
-        };
-
-        window.dispatchEvent(
-          new CustomEvent("add-to-cart", {
-            detail: cartItem,
-            bubbles: true,
-            composed: true,
-          })
-        );
-        loadCart();
-        quantities.value[dish.id] = 1;
-      }
-    };
-
-    const toggleCart = () => {
-      isCartVisible.value = !isCartVisible.value;
-    };
-
-    const incrementQuantity = (dishId) => {
-      quantities.value[dishId]++;
-    };
-
-    const decrementQuantity = (dishId) => {
-      if (quantities.value[dishId] > 1) {
-        quantities.value[dishId]--;
-      }
-    };
-
-    const updateTotalItems = () => {
-      totalItemsInCart.value = cart.value.items.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
-    };
-
-    const updateCartTotal = (event) => {
-      totalItemsInCart.value = event.detail.total;
-    };
-
-    onMounted(() => {
-      fetchRestaurantDetails();
-      loadCart();
-      window.addEventListener("add-to-cart", loadCart);
-      window.addEventListener("update-cart-total", updateCartTotal);
-    });
-
-    onUnmounted(() => {
-      window.removeEventListener("add-to-cart", loadCart);
-      window.removeEventListener("update-cart-total", updateCartTotal);
-    });
-
-    return {
-      restaurant,
-      loading,
-      error,
-      getImageUrl,
-      addToCart,
-      isCartVisible,
-      toggleCart,
-      totalItemsInCart,
-      quantities,
-      incrementQuantity,
-      decrementQuantity,
-      updateTotalItems,
-      isCheckoutPage: false,
-    };
+const api = {
+  baseUrl: "http://127.0.0.1:8000",
+  endPoints: {
+    restaurantDetails: "/api/restaurants",
   },
 };
+
+const getImageUrl = (path) => {
+  return `${api.baseUrl}/storage${path}`;
+};
+
+const fetchRestaurantDetails = async () => {
+  const slug = route.params.slug;
+  try {
+    loading.value = true;
+    const url = `${api.baseUrl}${api.endPoints.restaurantDetails}/${slug}`;
+    const response = await axios.get(url);
+    restaurant.value = response.data.data;
+    restaurant.value.dishes.forEach((dish) => {
+      quantities.value[dish.id] = 1;
+    });
+  } catch (err) {
+    console.error("Errore nel caricamento dei dettagli del ristorante:", err);
+    error.value =
+      "Si è verificato un errore nel caricamento dei dettagli del ristorante.";
+  } finally {
+    loading.value = false;
+  }
+};
+
+const loadCart = () => {
+  const savedCart = sessionStorage.getItem("cart");
+  if (savedCart) {
+    cart.value = JSON.parse(savedCart);
+    updateTotalItems();
+  }
+};
+
+const addToCart = (dish) => {
+  if (restaurant.value) {
+    const cartItem = {
+      id: dish.id,
+      name: dish.name,
+      price: Number(dish.price),
+      quantity: quantities.value[dish.id],
+      restaurantId: restaurant.value.id,
+      restaurantName: restaurant.value.name,
+    };
+
+    window.dispatchEvent(
+      new CustomEvent("add-to-cart", {
+        detail: cartItem,
+        bubbles: true,
+        composed: true,
+      })
+    );
+    loadCart();
+    quantities.value[dish.id] = 1;
+  }
+};
+
+const toggleCart = () => {
+  isCartVisible.value = !isCartVisible.value;
+};
+
+const incrementQuantity = (dishId) => {
+  quantities.value[dishId]++;
+};
+
+const decrementQuantity = (dishId) => {
+  if (quantities.value[dishId] > 1) {
+    quantities.value[dishId]--;
+  }
+};
+
+const updateTotalItems = () => {
+  totalItemsInCart.value = cart.value.items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+};
+
+const updateCartTotal = (event) => {
+  totalItemsInCart.value = event.detail.total;
+};
+
+onMounted(() => {
+  fetchRestaurantDetails();
+  loadCart();
+  window.addEventListener("add-to-cart", loadCart);
+  window.addEventListener("update-cart-total", updateCartTotal);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("add-to-cart", loadCart);
+  window.removeEventListener("update-cart-total", updateCartTotal);
+});
 </script>
 
 <template>
-  <div class="container-fluid py-4">
-    <div class="row">
-      <div :class="{ 'col-md-9': isCartVisible, 'col-md-12': !isCartVisible }">
-        <div v-if="loading" class="text-center">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Caricamento...</span>
-          </div>
-          <p>Caricamento dettagli ristorante...</p>
-        </div>
-
-        <div v-else-if="error" class="alert alert-danger" role="alert">
-          {{ error }}
-        </div>
-
-        <div v-else-if="restaurant" class="restaurant-details">
-          <div class="card mb-4">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img
-                  :src="getImageUrl(restaurant.image)"
-                  class="img-fluid rounded-start"
-                  :alt="restaurant.name"
-                />
-              </div>
-              <div class="col-md-8">
-                <div class="card-body">
-                  <h2 class="card-title">{{ restaurant.name }}</h2>
-                  <p class="card-text">
-                    <strong>Indirizzo:</strong> {{ restaurant.address }},
-                    {{ restaurant.city }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <h3 class="mb-3">Menu</h3>
-          <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
-            <div class="col" v-for="dish in restaurant.dishes" :key="dish.id">
-              <div class="card h-100">
-                <img
-                  :src="getImageUrl(dish.image)"
-                  class="card-img-top"
-                  :alt="dish.name"
-                />
-                <div class="card-body">
-                  <h5 class="card-title">{{ dish.name }}</h5>
-                  <p class="card-text">{{ dish.description }}</p>
-                  <p class="card-text">
-                    <strong>Prezzo:</strong> €{{
-                      Number(dish.price).toFixed(2)
-                    }}
-                  </p>
-                  <div class="d-flex align-items-center">
-                    <button
-                      @click="decrementQuantity(dish.id)"
-                      class="btn btn-outline-secondary btn-sm me-2"
-                    >
-                      -
-                    </button>
-                    <span class="me-2">{{ quantities[dish.id] }}</span>
-                    <button
-                      @click="incrementQuantity(dish.id)"
-                      class="btn btn-outline-secondary btn-sm me-2"
-                    >
-                      +
-                    </button>
-                    <button @click="addToCart(dish)" class="btn btn-primary color">
-                      Aggiungi
-                      {{
-                        quantities[dish.id] > 1
-                          ? quantities[dish.id] + " al"
-                          : "al"
-                      }}
-                      carrello
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-else class="alert alert-warning" role="alert">
-          Nessun dettaglio disponibile per questo ristorante.
-        </div>
+  <div class="restaurant-details-container">
+    <div class="restaurant-content" :class="{ 'cart-visible': isCartVisible }">
+      <div v-if="loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Caricamento dettagli ristorante...</p>
       </div>
-      <transition name="slide">
-        <div v-show="isCartVisible" class="col-md-3 cart-column">
-          <AppCart
-            @update-total-items="updateTotalItems"
-            :isCheckoutPage="isCheckoutPage"
+
+      <div v-else-if="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <template v-else-if="restaurant">
+        <div class="restaurant-header">
+          <img
+            :src="getImageUrl(restaurant.image)"
+            :alt="restaurant.name"
+            class="restaurant-image"
           />
+          <div class="restaurant-info">
+            <h2 class="restaurant-name">{{ restaurant.name }}</h2>
+            <p class="restaurant-address">
+              {{ restaurant.address }}, {{ restaurant.city }}
+            </p>
+          </div>
         </div>
-      </transition>
+
+        <h3 class="menu-title">Menu</h3>
+        <div class="menu-grid">
+          <div
+            v-for="dish in restaurant.dishes"
+            :key="dish.id"
+            class="dish-card"
+          >
+            <img
+              :src="getImageUrl(dish.image)"
+              :alt="dish.name"
+              class="dish-image"
+            />
+            <div class="dish-info">
+              <h5 class="dish-name">{{ dish.name }}</h5>
+              <p class="dish-description">{{ dish.description }}</p>
+              <p class="dish-price">€{{ Number(dish.price).toFixed(2) }}</p>
+              <div class="dish-actions">
+                <div class="quantity-control">
+                  <button
+                    @click="decrementQuantity(dish.id)"
+                    class="quantity-btn"
+                  >
+                    -
+                  </button>
+                  <span class="quantity">{{ quantities[dish.id] }}</span>
+                  <button
+                    @click="incrementQuantity(dish.id)"
+                    class="quantity-btn"
+                  >
+                    +
+                  </button>
+                </div>
+                <button @click="addToCart(dish)" class="add-to-cart-btn">
+                  Aggiungi
+                  {{
+                    quantities[dish.id] > 1 ? quantities[dish.id] + " al" : "al"
+                  }}
+                  carrello
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <div v-else class="no-details-message">
+        Nessun dettaglio disponibile per questo ristorante.
+      </div>
     </div>
+
+    <transition name="slide">
+      <div v-show="isCartVisible" class="cart-sidebar">
+        <AppCart
+          @update-total-items="updateTotalItems"
+          :isCheckoutPage="false"
+        />
+      </div>
+    </transition>
+
     <button
       @click="toggleCart"
-      class="btn btn-primary cart-toggle-btn"
-      :class="{ 'cart-toggle-btn-hidden': !isCartVisible }"
+      class="toggle-cart-btn"
+      :class="{ 'cart-hidden': !isCartVisible }"
     >
       {{ isCartVisible ? "Nascondi carrello" : "Mostra carrello" }}
-      <span v-if="totalItemsInCart > 0" class="badge bg-danger ms-2">
+      <span v-if="totalItemsInCart > 0" class="cart-badge">
         {{ totalItemsInCart }}
       </span>
     </button>
@@ -255,39 +213,212 @@ export default {
 
 <style scoped lang="scss">
 @use "../scss/partials/variables" as *;
-.color{
-  background-color: $main-color;
+.restaurant-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  position: relative;
 }
-.restaurant-details img {
-  max-height: 300px;
+
+.restaurant-content {
+  transition: margin-right 0.3s ease;
+}
+
+.restaurant-content.cart-visible {
+  margin-right: 300px;
+}
+
+.loading-spinner,
+.error-message,
+.no-details-message {
+  text-align: center;
+  padding: 2rem;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid $main-color;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.restaurant-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.restaurant-image {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 1rem;
+}
+
+.restaurant-name {
+  font-size: 2rem;
+  color: $main-color;
+  margin-bottom: 0.5rem;
+}
+
+.restaurant-address {
+  font-size: 1rem;
+  color: #666;
+}
+
+.menu-title {
+  font-size: 1.5rem;
+  color: $main-color;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.dish-card {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.dish-card:hover {
+  transform: translateY(-5px);
+}
+
+.dish-image {
+  width: 100%;
+  height: 180px;
   object-fit: cover;
 }
 
-.cart-toggle-btn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
+.dish-info {
+  padding: 1rem;
 }
 
-.cart-toggle-btn-hidden {
-  opacity: 0.7;
+.dish-name {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
 }
 
-.cart-toggle-btn-hidden:hover {
-  opacity: 1;
+.dish-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
 }
 
-.cart-column {
+.dish-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: $main-color;
+  margin-bottom: 0.5rem;
+}
+
+.dish-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-btn {
+  background-color: $main-color;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.quantity-btn:hover {
+  background-color: #00a699;
+}
+
+.quantity {
+  margin: 0 0.5rem;
+}
+
+.add-to-cart-btn {
+  background-color: $main-color;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #00a699;
+}
+
+.cart-sidebar {
   position: fixed;
   top: 0;
   right: 0;
+  width: 300px;
   height: 100vh;
-  overflow-y: auto;
   background-color: white;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  z-index: 999;
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+.toggle-cart-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: $main-color;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1001;
+  transition: opacity 0.3s, background-color 0.3s;
+}
+
+.toggle-cart-btn:hover {
+  background-color: $main-color;
+}
+
+.toggle-cart-btn.cart-hidden {
+  opacity: 0.7;
+}
+
+.cart-badge {
+  background-color: #ff5a5f;
+  color: white;
+  border-radius: 50%;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
 }
 
 .slide-enter-active,
@@ -300,14 +431,13 @@ export default {
   transform: translateX(100%);
 }
 
-.cart-toggle-btn .badge {
-  font-size: 0.8em;
-  vertical-align: top;
-}
+@media (max-width: 768px) {
+  .restaurant-content.cart-visible {
+    margin-right: 0;
+  }
 
-.btn-outline-secondary {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  .cart-sidebar {
+    width: 100%;
+  }
 }
 </style>
