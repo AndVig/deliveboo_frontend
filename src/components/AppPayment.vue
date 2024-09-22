@@ -1,14 +1,27 @@
 <template>
   <div>
     <form @submit.prevent="onSubmit">
-      <div class="card " style="width:auto">
+      <div class="card" style="width: auto">
         <div class="card-header text-center">Dati Cliente</div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item my-2">
             <div class="row mb-3">
-              <label for="name" class="col-sm-2 col-form-label ">Nome:</label>
+              <label for="name" class="col-sm-2 col-form-label"
+                >Nome e Cognome:</label
+              >
               <div class="col-sm-10">
-                <input id="name" v-model="name" type="name" required />
+                <input
+                  id="name"
+                  v-model="name"
+                  type="text"
+                  required
+                  @blur="validateName"
+                  :class="{ 'is-invalid': errors.name }"
+                  placeholder="Es: Mario Rossi"
+                />
+                <div v-if="errors.name" class="invalid-feedback">
+                  {{ errors.name }}
+                </div>
               </div>
             </div>
           </li>
@@ -16,26 +29,53 @@
             <div class="row mb-3">
               <label for="email" class="col-sm-2 col-form-label">Email:</label>
               <div class="col-sm-10">
-                <input id="email" v-model="email" type="email" required />
+                <input
+                  id="email"
+                  v-model="email"
+                  type="email"
+                  required
+                  @blur="validateEmail"
+                  :class="{ 'is-invalid': errors.email }"
+                  placeholder="Es: mario.rossi@example.com"
+                />
+                <div v-if="errors.email" class="invalid-feedback">
+                  {{ errors.email }}
+                </div>
               </div>
             </div>
           </li>
           <li class="list-group-item my-2">
             <div class="row mb-3">
-              <label for="address" class="col-sm-2 col-form-label">
-                Indirizzo:
-              </label>
+              <label for="address" class="col-sm-2 col-form-label"
+                >Indirizzo:</label
+              >
               <div class="col-sm-10">
-                <input id="address" v-model="address" type="text" required />
+                <input
+                  id="address"
+                  v-model="address"
+                  type="text"
+                  required
+                  @blur="validateAddress"
+                  :class="{ 'is-invalid': errors.address }"
+                  placeholder="Es: Via Roma 123"
+                />
+                <div v-if="errors.address" class="invalid-feedback">
+                  {{ errors.address }}
+                </div>
               </div>
             </div>
           </li>
         </ul>
       </div>
 
-      <div></div>
       <div ref="dropinContainer"></div>
-      <button class="action-btn my-5" type="submit" :disabled="!isPaymentMethodReady">Paga</button>
+      <button
+        class="action-btn my-5"
+        type="submit"
+        :disabled="!isFormValid || !isPaymentMethodReady"
+      >
+        Paga
+      </button>
     </form>
   </div>
 </template>
@@ -53,18 +93,28 @@ export default {
       isLoading: true,
       error: null,
       cseKey: "sandbox_nddp4k74_cyss7gspwctv5d4t",
+      name: "",
       email: "",
       address: "",
+      errors: {
+        name: "",
+        email: "",
+        address: "",
+      },
     };
   },
 
-  setup() {
-    const loadCart = () => {
-      const savedCart = sessionStorage.getItem("cart");
-      if (savedCart) {
-        cart.value = JSON.parse(savedCart);
-      }
-    };
+  computed: {
+    isFormValid() {
+      return (
+        this.name &&
+        this.email &&
+        this.address &&
+        !this.errors.name &&
+        !this.errors.email &&
+        !this.errors.address
+      );
+    },
   },
 
   async created() {
@@ -179,7 +229,69 @@ export default {
       }
     },
 
+    validateName() {
+      const nameParts = this.name.trim().split(/\s+/);
+      if (nameParts.length < 2) {
+        this.errors.name = "Inserisci sia il nome che il cognome";
+      } else if (nameParts[0].length < 2 || nameParts[1].length < 2) {
+        this.errors.name =
+          "Sia il nome che il cognome devono avere almeno 2 caratteri";
+      } else if (/\d/.test(this.name)) {
+        this.errors.name = "Il nome non può contenere numeri";
+      } else if (/[^a-zA-Z\s]/.test(this.name)) {
+        this.errors.name = "Il nome non può contenere caratteri speciali";
+      } else {
+        this.errors.name = "";
+      }
+    },
+
+    validateEmail() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!this.email) {
+        this.errors.email = "L'email è obbligatoria";
+      } else if (!emailRegex.test(this.email)) {
+        this.errors.email = "Inserisci un indirizzo email valido";
+      } else {
+        this.errors.email = "";
+      }
+    },
+
+    validateAddress() {
+      const lastSpaceIndex = this.address.lastIndexOf(" ");
+      if (lastSpaceIndex === -1) {
+        this.errors.address = "Inserisci sia la via che il numero civico";
+        return;
+      }
+
+      const streetName = this.address.slice(0, lastSpaceIndex).trim();
+      const streetNumber = this.address.slice(lastSpaceIndex + 1).trim();
+
+      if (streetName.length < 3) {
+        this.errors.address = "Il nome della via deve avere almeno 3 caratteri";
+      } else if (/[^a-zA-Z\s]/.test(streetName)) {
+        this.errors.address =
+          "Il nome della via non può contenere caratteri speciali o numeri";
+      } else if (!/^\d+[a-zA-Z]?$/.test(streetNumber)) {
+        this.errors.address =
+          "Inserisci un numero civico valido (numero seguito opzionalmente da una lettera)";
+      } else {
+        this.errors.address = "";
+      }
+    },
+
+    validateForm() {
+      this.validateName();
+      this.validateEmail();
+      this.validateAddress();
+      return this.isFormValid;
+    },
+
     async onSubmit() {
+      if (!this.validateForm()) {
+        console.log("Form non valido, impossibile procedere con il pagamento");
+        return;
+      }
+
       if (!this.dropinInstance) {
         this.error = "Istanza Braintree non inizializzata";
         return;
@@ -218,6 +330,7 @@ export default {
 
 <style scoped lang="scss">
 @use "../scss/partials/variables" as *;
+
 form {
   display: flex;
   flex-direction: column;
@@ -229,17 +342,6 @@ input {
   padding: 0.5rem;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-// button:disabled {
-//   background-color: #cccccc;
-// }
 .action-btn {
   display: block;
   width: 100%;
@@ -257,5 +359,20 @@ button {
 
 .action-btn:hover {
   background-color: #00a699;
+}
+
+.action-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.invalid-feedback {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+.is-invalid {
+  border-color: red;
 }
 </style>
