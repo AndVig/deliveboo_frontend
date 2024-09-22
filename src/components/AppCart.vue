@@ -168,14 +168,14 @@ watch(totalItemsInCart, () => {
           </div>
           <div class="item-actions">
             <button @click="decreaseQuantity(item)" class="quantity-btn">
-              -
+              <i class="fa-solid fa-minus"></i>
             </button>
             <span class="item-quantity">{{ item.quantity }}</span>
             <button @click="increaseQuantity(item)" class="quantity-btn">
-              +
+              <i class="fa-solid fa-plus"></i>
             </button>
-            <button @click="removeItem(item)" class="remove-btn">
-              Rimuovi
+            <button @click="removeItem(item)" class="remove-btn mx-2">
+              <i class="fa-solid fa-trash"></i>
             </button>
           </div>
         </li>
@@ -196,7 +196,7 @@ watch(totalItemsInCart, () => {
 <style scoped lang="scss">
 @use "../scss/partials/variables" as *;
 .cart-container {
-  max-width: 600px;
+  max-width:   600px;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #fff;

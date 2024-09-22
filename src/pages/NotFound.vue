@@ -28,7 +28,7 @@ export default {
       </p>
       <button 
         @click="goHome" 
-        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out my-5"
       >
         Torna alla Home
       </button>

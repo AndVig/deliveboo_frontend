@@ -161,22 +161,23 @@ onUnmounted(() => {
                     @click="decrementQuantity(dish.id)"
                     class="quantity-btn"
                   >
-                    -
+                  <i class="fa-solid fa-minus"></i>
                   </button>
                   <span class="quantity">{{ quantities[dish.id] }}</span>
                   <button
                     @click="incrementQuantity(dish.id)"
                     class="quantity-btn"
                   >
-                    +
+                  <i class="fa-solid fa-plus"></i>
                   </button>
                 </div>
                 <button @click="addToCart(dish)" class="add-to-cart-btn">
-                  Aggiungi
+                  <!-- Aggiungi
                   {{
                     quantities[dish.id] > 1 ? quantities[dish.id] + " al" : "al"
                   }}
-                  carrello
+                  carrello -->
+                  <i class="fa-solid fa-cart-plus"></i>
                 </button>
               </div>
             </div>

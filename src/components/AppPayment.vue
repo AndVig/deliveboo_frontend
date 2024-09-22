@@ -1,20 +1,41 @@
 <template>
   <div>
     <form @submit.prevent="onSubmit">
-      <div>
-        <label for="name">Nome:</label>
-        <input id="name" v-model="name" type="name" required />
+      <div class="card " style="width:auto">
+        <div class="card-header text-center">Dati Cliente</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item my-2">
+            <div class="row mb-3">
+              <label for="name" class="col-sm-2 col-form-label ">Nome:</label>
+              <div class="col-sm-10">
+                <input id="name" v-model="name" type="name" required />
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item my-2">
+            <div class="row mb-3">
+              <label for="email" class="col-sm-2 col-form-label">Email:</label>
+              <div class="col-sm-10">
+                <input id="email" v-model="email" type="email" required />
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item my-2">
+            <div class="row mb-3">
+              <label for="address" class="col-sm-2 col-form-label">
+                Indirizzo:
+              </label>
+              <div class="col-sm-10">
+                <input id="address" v-model="address" type="text" required />
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
-      <div>
-        <label for="email">Email:</label>
-        <input id="email" v-model="email" type="email" required />
-      </div>
-      <div>
-        <label for="address">Indirizzo:</label>
-        <input id="address" v-model="address" type="text" required />
-      </div>
+
+      <div></div>
       <div ref="dropinContainer"></div>
-      <button type="submit" :disabled="!isPaymentMethodReady">Paga</button>
+      <button class="action-btn my-5" type="submit" :disabled="!isPaymentMethodReady">Paga</button>
     </form>
   </div>
 </template>
@@ -195,7 +216,8 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "../scss/partials/variables" as *;
 form {
   display: flex;
   flex-direction: column;
@@ -215,7 +237,25 @@ button {
   cursor: pointer;
 }
 
-button:disabled {
-  background-color: #cccccc;
+// button:disabled {
+//   background-color: #cccccc;
+// }
+.action-btn {
+  display: block;
+  width: 100%;
+  background-color: $main-color;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 1rem;
+}
+
+.action-btn:hover {
+  background-color: #00a699;
 }
 </style>

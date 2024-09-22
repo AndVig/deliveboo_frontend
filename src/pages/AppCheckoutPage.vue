@@ -21,8 +21,8 @@ export default {
 </script>
 
 <template>
-  <div class="container text-center">
-    <div class="my-3">
+  <div class="container">
+    <div class="my-3 text-center">
       <h1>Checkout</h1>
     </div>
     <AppCart :isCheckoutPage="true" />
