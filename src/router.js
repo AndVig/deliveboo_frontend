@@ -5,6 +5,7 @@ import AppCheckout from "./pages/AppCheckoutPage.vue";
 import RestaurantDetails from "./pages/RestaurantDetails.vue";
 
 import axios from "axios";
+import AppConfirmPage from "./pages/AppConfirmPage.vue";
 
 // Funzione per caricare gli slug dall'API e aggiungere le route dinamiche
 async function addDynamicRoutes() {
@@ -41,6 +42,11 @@ const router = createRouter({
       path: "/checkout",
       name: "checkout",
       component: AppCheckout,
+    },
+    {
+      path: "/confirm",
+      name: "confirm",
+      component: AppConfirmPage,
     },
 
     {
