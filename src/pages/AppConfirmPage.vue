@@ -1,127 +1,153 @@
 <template>
-    <div class="order-confirmation my-5">
-      <div class="header">
-        <span class="check-icon">✓</span>
-        <h1>Ordine Confermato!</h1>
-      </div>
-  
-      <div class="order-details">
-        <h2>Dettagli dell'ordine #{{ order.id }}</h2>
-        <ul>
-          <li v-for="(item, index) in order.items" :key="index">
-            {{ item.quantity }}x {{ item.name }} - €{{ (item.price * item.quantity).toFixed(2) }}
-          </li>
-        </ul>
-        <p class="total">Totale: €{{ calculateTotal(order.items) }}</p>
-      </div>
-  
-      <div class="delivery-info">
-        <h3>Indirizzo di consegna:</h3>
-        <p>{{ order.deliveryAddress }}</p>
-      </div>
-  
-      <div class="delivery-time">
-        <h3>Tempo stimato di consegna:</h3>
-        <p>{{ order.estimatedDeliveryTime }}</p>
-      </div>
-  
-      <div class="thank-you-message">
-        <p>Grazie per il tuo ordine! Puoi seguire lo stato della tua consegna nell'app.</p>
+  <div class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div v-if="isLoading" class="text-center">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Caricamento...</span>
+          </div>
+        </div>
+        <div v-else-if="error" class="alert alert-danger" role="alert">
+          {{ error }}
+        </div>
+        <div v-else-if="order" class="card">
+          <div class="card-body">
+            <div class="text-center mb-4">
+              <div
+                class="bg-success text-white rounded-circle d-inline-flex justify-content-center align-items-center"
+                style="width: 50px; height: 50px"
+              >
+                <span class="h4 mb-0">✓</span>
+              </div>
+              <h2 class="mt-3 mb-0">Ordine Confermato!</h2>
+              <p class="text-muted">Grazie per il tuo ordine #{{ order.id }}</p>
+            </div>
+
+            <div class="mb-4">
+              <h3 class="h5 mb-3">Dettagli dell'ordine</h3>
+              <h4 class="h6 mb-2">{{ order.restaurantName }}</h4>
+              <ul class="list-group mb-3">
+                <li
+                  v-for="(item, index) in order.items"
+                  :key="index"
+                  class="list-group-item d-flex justify-content-between lh-sm"
+                >
+                  <div>
+                    <h6 class="my-0">{{ item.name }}</h6>
+                    <small class="text-muted"
+                      >Quantità: {{ item.quantity }}</small
+                    >
+                  </div>
+                  <span class="text-muted"
+                    >€{{ (item.price * item.quantity).toFixed(2) }}</span
+                  >
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                  <strong>Totale</strong>
+                  <strong>€{{ order.total }}</strong>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mb-4">
+              <h3 class="h5 mb-3">Indirizzo di consegna</h3>
+              <p class="mb-0">{{ order.deliveryAddress }}</p>
+            </div>
+
+            <div class="mb-4">
+              <h3 class="h5 mb-3">Tempo stimato di consegna</h3>
+              <p class="mb-0">{{ order.estimatedDeliveryTime }}</p>
+            </div>
+
+            <div class="alert alert-info" role="alert">
+              <i class="bi bi-info-circle me-2"></i>
+              Puoi seguire lo stato della tua consegna nell'app.
+            </div>
+          </div>
+        </div>
+        <div v-else class="alert alert-warning" role="alert">
+          Nessun dato dell'ordine disponibile.
+        </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import { ref } from 'vue';
-  
-  export default {
-    name: 'OrderConfirmation',
-    setup() {
-      const order = ref({
-        id: 'ORD-12345',
-        items: [
-          { name: 'Pizza Margherita', quantity: 1, price: 10.99 },
-          { name: 'Insalata Cesar', quantity: 1, price: 7.99 },
-          { name: 'Coca Cola', quantity: 2, price: 2.50 },
-        ],
-        total: 23.98,
-        deliveryAddress: 'Via Roma 123, 00100 Roma',
-        estimatedDeliveryTime: '30-45 minuti',
-      });
-  
-      const calculateTotal = (items) => {
-        return items.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2);
-      };
-  
-      return {
-        order,
-        calculateTotal
-      };
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .order-confirmation {
-    max-width: 32rem;
-    margin: 0 auto;
-    padding: 1.5rem;
-    background-color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
-  }
-  
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-  }
-  
-  .check-icon {
-    color: #10B981;
-    margin-right: 0.5rem;
-    font-size: 1.5rem;
-    background-color: #D1FAE5;
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  h1 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #047857;
-  }
-  
-  h2, h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  
-  ul {
-    list-style-type: disc;
-    padding-left: 1.25rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .total {
-    font-weight: bold;
-    margin-top: 0.5rem;
-  }
-  
-  .order-details, .delivery-info, .delivery-time {
-    margin-bottom: 1.5rem;
-  }
-  
-  .thank-you-message {
-    background-color: #DBEAFE;
-    padding: 1rem;
-    border-radius: 0.375rem;
-    color: #1E40AF;
-  }
-  </style>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted } from "vue";
+
+export default {
+  name: "OrderConfirmation",
+  setup() {
+    const order = ref(null);
+    const isLoading = ref(true);
+    const error = ref(null);
+    // Recupera l'ID dell'ordine dal sessionStorage
+    const orderId = sessionStorage.getItem("currentOrderId");
+    const orderAddress = sessionStorage.getItem("currentOrderAddress");
+
+    const calculateTotal = (items) => {
+      if (!Array.isArray(items)) {
+        console.error("Gli items non sono un array:", items);
+        return "0.00";
+      }
+      return items
+        .reduce((acc, item) => {
+          const price = parseFloat(item.price) || 0;
+          const quantity = parseInt(item.quantity) || 0;
+          return acc + price * quantity;
+        }, 0)
+        .toFixed(2);
+    };
+
+    const loadOrderData = () => {
+      isLoading.value = true;
+      error.value = null;
+
+      setTimeout(() => {
+        try {
+          let cartData = JSON.parse(sessionStorage.getItem("cart") || "{}");
+
+          if (
+            !cartData ||
+            typeof cartData !== "object" ||
+            !Array.isArray(cartData.items)
+          ) {
+            throw new Error("Dati del carrello non validi o mancanti");
+          }
+
+          if (cartData.items.length === 0) {
+            throw new Error("Il carrello è vuoto");
+          }
+
+          order.value = {
+            id: "ORD-" + orderId,
+            restaurantId: cartData.restaurantId,
+            restaurantName: cartData.restaurantName,
+            items: cartData.items,
+            total: calculateTotal(cartData.items),
+            deliveryAddress: orderAddress,
+            estimatedDeliveryTime: "30-45 minuti",
+          };
+        } catch (e) {
+          error.value =
+            "Errore nel caricamento dei dati dell'ordine: " + e.message;
+          console.error("Errore completo:", e);
+        } finally {
+          isLoading.value = false;
+        }
+      }, 1000);
+    };
+
+    onMounted(() => {
+      loadOrderData();
+    });
+
+    return {
+      order,
+      isLoading,
+      error,
+    };
+  },
+};
+</script>
