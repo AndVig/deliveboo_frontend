@@ -6,19 +6,10 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item my-2">
             <div class="row mb-3">
-              <label for="name" class="col-sm-2 col-form-label"
-                >Nome e Cognome:</label
-              >
+              <label for="name" class="col-sm-2 col-form-label">Nome e Cognome:</label>
               <div class="col-sm-10">
-                <input
-                  id="name"
-                  v-model="name"
-                  type="text"
-                  required
-                  @blur="validateName"
-                  :class="{ 'is-invalid': errors.name }"
-                  placeholder="Es: Mario Rossi"
-                />
+                <input id="name" v-model="name" type="text" required @blur="validateName"
+                  :class="{ 'is-invalid': errors.name }" placeholder="Es: Mario Rossi" />
                 <div v-if="errors.name" class="invalid-feedback">
                   {{ errors.name }}
                 </div>
@@ -29,15 +20,8 @@
             <div class="row mb-3">
               <label for="email" class="col-sm-2 col-form-label">Email:</label>
               <div class="col-sm-10">
-                <input
-                  id="email"
-                  v-model="email"
-                  type="email"
-                  required
-                  @blur="validateEmail"
-                  :class="{ 'is-invalid': errors.email }"
-                  placeholder="Es: mario.rossi@example.com"
-                />
+                <input id="email" v-model="email" type="email" required @blur="validateEmail"
+                  :class="{ 'is-invalid': errors.email }" placeholder="Es: mario.rossi@example.com" />
                 <div v-if="errors.email" class="invalid-feedback">
                   {{ errors.email }}
                 </div>
@@ -46,19 +30,10 @@
           </li>
           <li class="list-group-item my-2">
             <div class="row mb-3">
-              <label for="address" class="col-sm-2 col-form-label"
-                >Indirizzo:</label
-              >
+              <label for="address" class="col-sm-2 col-form-label">Indirizzo:</label>
               <div class="col-sm-10">
-                <input
-                  id="address"
-                  v-model="address"
-                  type="text"
-                  required
-                  @blur="validateAddress"
-                  :class="{ 'is-invalid': errors.address }"
-                  placeholder="Es: Via Roma 123"
-                />
+                <input id="address" v-model="address" type="text" required @blur="validateAddress"
+                  :class="{ 'is-invalid': errors.address }" placeholder="Es: Via Roma 123" />
                 <div v-if="errors.address" class="invalid-feedback">
                   {{ errors.address }}
                 </div>
@@ -69,11 +44,7 @@
       </div>
 
       <div ref="dropinContainer"></div>
-      <button
-        class="action-btn my-5"
-        type="submit"
-        :disabled="!isFormValid || !isPaymentMethodReady"
-      >
+      <button class="action-btn my-5" type="submit" :disabled="!isFormValid || !isPaymentMethodReady">
         Paga
       </button>
     </form>
@@ -306,6 +277,10 @@ export default {
         if (response.success) {
           console.log("Pagamento avvenuto con successo");
           // Qui potresti voler reindirizzare l'utente o mostrare un messaggio di successo
+          // Nel componente o nella pagina di checkout, dopo che il pagamento è stato processato con successo
+          window.dispatchEvent(new Event('order-completed'));
+          // Reindirizzamento alla pagina di successo
+          this.$router.push("/");
         } else {
           this.error =
             response.message ||
@@ -326,6 +301,7 @@ export default {
     }
   },
 };
+
 </script>
 
 <style scoped lang="scss">

@@ -105,6 +105,14 @@ const clearCart = () => {
   updateTotalItems();
 };
 
+// Nuovo metodo per gestire il successo dell'ordine
+const handleOrderSuccess = () => {
+  clearCart();
+  // Puoi mostrare un messaggio di successo o reindirizzare l'utente
+  alert("Ordine completato con successo! Il carrello è stato svuotato.");
+  router.push({ name: "home" }); // Reindirizza alla home page o dove preferisci
+};
+
 const cartTotal = computed(() => {
   return cart.value.items.reduce(
     (total, item) => total + Number(item.price) * item.quantity,
@@ -125,7 +133,7 @@ const handleButtonClick = () => {
         params: { slug: restaurantSlug },
       });
     } else {
-      console.error("Restaurant slug not found in query parameters");
+      console.error("Slug del ristorante non trovato nei parametri della query");
     }
   } else {
     router.push({
@@ -138,11 +146,15 @@ const handleButtonClick = () => {
 onMounted(() => {
   loadCart();
   window.addEventListener("add-to-cart", addToCart);
+  // Aggiungi un listener per l'evento di ordine completato
+  window.addEventListener("order-completed", handleOrderSuccess);
   updateTotalItems();
 });
 
 onUnmounted(() => {
   window.removeEventListener("add-to-cart", addToCart);
+  // Rimuovi il listener quando il componente viene smontato
+  window.removeEventListener("order-completed", handleOrderSuccess);
 });
 
 watch(totalItemsInCart, () => {
@@ -195,8 +207,9 @@ watch(totalItemsInCart, () => {
 
 <style scoped lang="scss">
 @use "../scss/partials/variables" as *;
+
 .cart-container {
-  max-width:   600px;
+  max-width: 600px;
   margin: 2rem auto;
   padding: 1rem;
   background-color: #fff;
