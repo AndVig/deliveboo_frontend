@@ -1,11 +1,18 @@
+<template>
+  <AppHero />
+  <AppSearch />
+  <AppCarousel />
+  <AppSponsor />
+  <AppMerchBlock />
+</template>
+
 <script>
 import axios from "axios";
-
 import AppSponsor from "../components/AppSponsor.vue";
 import AppMerchBlock from "../components/AppMerchBlock.vue";
 import AppSearch from "../components/AppSearch.vue";
 import AppCarousel from "../components/AppCarousel.vue";
-
+import AppHero from "../components/AppHero.vue";
 
 export default {
   name: "AppHomePage",
@@ -21,7 +28,7 @@ export default {
     };
   },
   components: {
-
+    AppHero,
     AppSearch,
     AppSponsor,
     AppMerchBlock,
@@ -47,12 +54,6 @@ export default {
 };
 </script>
 
-<template>
- 
-  <AppSearch />
-  <AppCarousel />
-  <AppSponsor />
-  <AppMerchBlock />
-</template>
-
-<style></style>
+<style scoped>
+/* Stili specifici per la homepage, se necessari */
+</style>
