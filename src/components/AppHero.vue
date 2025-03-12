@@ -43,7 +43,7 @@ $highlight-color: $main-color;
     url("/img/hero-img.jpg");
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 50vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,7 +77,7 @@ $highlight-color: $main-color;
 }
 
 .hero-title {
-  font-size: 4.5rem;
+  font-size: 5rem;
   font-weight: bold;
   margin-bottom: 1rem;
   @include text-shadow(4px);
